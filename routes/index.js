@@ -1,7 +1,9 @@
 var express = require('express');
-var router = express.Router();
-
 const bcyrypt = require('bcryptjs');
+const jwt =require('jsonwebtoken');
+
+
+var router = express.Router();
 
 //models
 const User = require('../models/User');
@@ -28,4 +30,44 @@ router.post('/register', function(req, res, next) {
     });
    });
 });
+
+
+router.post('/authenticate',(req,res)=>{
+  const {username,password}=req.body;
+
+  User.findOne({
+    username
+  },(err,user)=>{
+    if(err)
+      throw err;
+
+    if(!user){
+      res.json({
+        status:false,
+        message:'User not found.'
+      })
+    }else{
+      bcyrypt.compare(password,user.password).then((result)=>{
+        if(!result){
+          res.json({
+            status:false,
+            message:'Wrong password'
+          });
+        }else{
+          const payload = {
+            username
+          };
+          const token= jwt.sign(payload,req.app.get('api_secret_key'),{
+            expiresIn:720//12 saate denk geliyor
+          });
+
+          res.json({
+            status:true,
+            token
+          });
+        }
+      });
+    }
+  })
+})
 module.exports = router;
