@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
 
@@ -62,5 +63,60 @@ router.get('/',(req,res)=>{
       res.json(err);
     });
 });
+
+
+router.get('/:director_id',(req,res)=>{
+  const promise = Director.aggregate([
+    {
+      $match:{
+        '_id':mongoose.Types.ObjectId(req.params.director_id)
+      }
+    },
+    {
+      $lookup: {
+        from: 'movies',
+        localField:'_id',//director tablosunda hangi alanla eslestirecek
+        foreignField:'director_id',
+        as: 'movies'
+      }
+    },
+      {
+        $unwind:{
+          path:'$movies',
+          preserveNullAndEmptyArrays:true//filmi olmayan yönetmenlerinde gelmesini sağlar
+        }
+      },
+      {
+        $group://bir yöneticinin filmlerinin tektek değilde. Kendi altında bir kere gelmesini groupla sağlarız.
+        {
+          _id:{
+            _id:'$_id',
+            name:'$name',
+            surname:'$surname',
+            bio:'$bio'
+          },
+          movies: {
+            $push:'$movies'
+          }
+        }
+      },
+      {
+        $project: {//datanın nasıl gösterilecegini ayarlamamızı sağlıyor
+          _id:'$_id._id',
+          name:'$_id.name',
+          surname:'$_id.surname',
+          movies: '$movies'
+        }
+      }
+    ]);
+
+    promise.then((data)=>{
+      res.json(data);
+    }).catch((err)=>{
+      res.json(err);
+    });
+});
+
+
 
 module.exports = router;
