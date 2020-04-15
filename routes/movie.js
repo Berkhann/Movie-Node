@@ -70,7 +70,19 @@ router.get('/:movie_id',(req,res,next)=>{//id ile bulma endpoint
 });
 
 router.get('/',(req,res)=>{//All movies
-    const promise = Movie.find({ });
+    const promise = Movie.aggregate([
+      {
+        $lookup:{
+          from: 'directors',
+          localField:'director_id',
+          foreignField:'_id',
+          as:'director'
+        }
+      },
+      {
+        $unwind:'$director'
+      }
+    ]);
 
     promise.then((data)=>{
       res.json(data);

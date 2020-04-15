@@ -118,5 +118,38 @@ router.get('/:director_id',(req,res)=>{
 });
 
 
+router.put('/:director_id',(req,res,next)=>{//update endpoint
+  const promise = Director.findByIdAndUpdate(
+    req.params.director_id,
+    req.body,
+    {
+      new:true//update edildikten sonra yeni datanın dönülmesini saglar
+    });//req.params içinde gelen parametreleri bulundurur
+
+  promise.then((director)=>{
+    if(!director)
+      next({message: 'The director was not found'});
+    
+    res.json({director});
+  }).catch((err)=>
+  {
+    res.json(err);
+  });
+});
+
+
+router.delete('/:director_id',(req,res,next)=>{//delete endpoint
+  const promise = Director.findByIdAndRemove(req.params.director_id,req.body);//req.params içinde gelen parametreleri bulundurur
+
+  promise.then((director)=>{
+    if(!director)
+      next({message: 'The director was not found'});
+    
+    res.json({director});
+  }).catch((err)=>
+  {
+    res.json(err);
+  });
+});
 
 module.exports = router;
