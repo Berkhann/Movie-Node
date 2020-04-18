@@ -27,7 +27,7 @@ router.delete('/:movie_id',(req,res,next)=>{//delete endpoint
     if(!movie)
       next({message: 'The movie was not found'});
     
-    res.json({movie});
+    res.json({status:1});
   }).catch((err)=>
   {
     res.json(err);
@@ -46,7 +46,7 @@ router.put('/:movie_id',(req,res,next)=>{//update endpoint
     if(!movie)
       next({message: 'The movie was not found'});
     
-    res.json({movie});
+    res.json(movie);
   }).catch((err)=>
   {
     res.json(err);
@@ -102,7 +102,7 @@ router.post('/', function(req, res, next) {
   });*/
   const promise = movie.save();
   promise.then((data)=>{
-    res.json({status:1})
+    res.json(data)
   }).catch((err)=>{
     res.json(err);
   });
