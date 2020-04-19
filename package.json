@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
-    "test":"mocha --exit --recursive"
+    "start": "node ./bin/www",
+    "start:dev": "nodemon ./bin/www",
+    "test": "mocha --exit --recursive"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -12,6 +13,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "^4.17.1",
+    "git": "^0.1.5",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^4.13.6",
