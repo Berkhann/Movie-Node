@@ -18,7 +18,7 @@
     "git": "^0.1.5",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",
-    "mocha": "^7.1.1",
+    "mocha": "^10.2.0",
     "mongoose": "^4.13.6",
     "morgan": "^1.9.1",
     "serve-favicon": "~2.4.5"
